@@ -1,4 +1,17 @@
-﻿<div class="row">
+﻿<script>
+
+    function funBegin() {
+    alert("Начать работу с ajax");
+    }
+    function funSuccess(data) {
+    alert("Запрос выполнен, получено:\n"+data);
+    console.log(data);
+    }
+    function funComplete(request, status) {
+    alert("Статус запроса:\n"+status);
+    }
+</script>
+<div class="row">
     <div class="col-md-4">
         <h3>Программы кредитования</h3>
         <table class="table-bordered">
@@ -32,9 +45,27 @@
         </table>
         <p>
             <a asp-controller="Home" asp-action="CreateBid" asp->
-                Подать заявку на
-                получение кредита &raquo;
+                Подать заявку на получение кредита &raquo;
             </a>
         </p>
+        <div>
+            <h5>Просмотр заявителей по кредиту</h5>
+        </div>
+        <div id="results">
+            <form data-ajax="true"
+                  data-ajax-url="/Home/BidSearch"
+                  data-ajax-update="#results" data-ajax-mode="after"
+                  data-ajax-begin="funBegin"
+                  data-ajax-success="funSuccess"
+                  data-ajax-complete="funComplete">
+                <input type="text" name="Name" />
+                <input type="submit" value="Поиск" />
+            </form>
+        </div>
+        @section scripts {
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.js"
+                    integrity="sha256-v2nySZafnswY87um3ymbg7p9f766IQspC5oqaqZVX2c="
+                    crossorigin="anonymous"></script>
+        }
     </div>
 </div>

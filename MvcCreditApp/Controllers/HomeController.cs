@@ -1,7 +1,8 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MvcCreditApp.Data;
 using MvcCreditApp.Models;
+using System.Diagnostics;
 
 namespace MvcCreditApp.Controllers
 {
@@ -38,7 +39,7 @@ namespace MvcCreditApp.Controllers
             var allCredits = db.Credits.ToList<Credit>();
             ViewBag.Credits = allCredits;
         }
-
+        [Authorize]
         [HttpGet]
         public ActionResult CreateBid()
         {
@@ -56,6 +57,18 @@ namespace MvcCreditApp.Controllers
             // Сохраняем в БД все изменения 
             db.SaveChanges();
             return "Спасибо, " + newBid.Name + ", за выбор нашего банка.Ваша заявка будет рассмотрена в течении 10 дней."; 
+        }
+        //Добавил для 7го
+        public ActionResult BidSearch(string name)
+        {
+            var allBids = db.Bids.Where(a =>
+            a.CreditHead.Contains(name)).ToList();
+            if (allBids.Count == 0)
+            {
+                return Content("Указанный кредит " + name + " не найден");
+                //return HttpNotFound(); 
+            }
+            return PartialView(allBids);
         }
     }
 }
